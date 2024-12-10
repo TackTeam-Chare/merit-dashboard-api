@@ -8,7 +8,7 @@ app.use(express.json());
 
 // CORS Configuration
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "*", // Allow your frontend domain
+  origin: process.env.FRONTEND_URL || "*", // URL ของ Frontend ที่อนุญาต เช่น https://your-frontend.vercel.app
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };

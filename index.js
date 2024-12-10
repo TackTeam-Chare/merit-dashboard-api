@@ -8,18 +8,10 @@ app.use(express.json());
 
 // CORS Configuration
 const corsOptions = {
-  origin: (origin, callback) => {
-    const allowedOrigins = process.env.CORS_ALLOWED_ORIGIN.split(",");
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: process.env.FRONTEND_URL || "*", // Allow your frontend domain
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
-
 app.use(cors(corsOptions));
 
 // MySQL Database Connection

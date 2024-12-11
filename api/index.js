@@ -18,12 +18,13 @@ const dbConfig = {
 const pool = mysql.createPool(dbConfig);
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "*",
-  methods: "GET,POST,OPTIONS",
-  allowedHeaders: "Content-Type,Authorization",
+  origin: "https://dashboard-accumulation.vercel.app",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
+
 
 // API to handle user login and retrieve or create user data
 app.post("/api/user", async (req, res) => {

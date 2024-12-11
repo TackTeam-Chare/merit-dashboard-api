@@ -5,5 +5,30 @@
   ],
   "routes": [
     { "src": "/(.*)", "dest": "/api/index.js" }
-  ]
+  ],
+    "rewrites": [
+      {
+        "source": "/api/(.*)",
+        "destination": "https://api-dashboard-accumulation.vercel.app/api/$1"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/api/(.*)",
+        "headers": [
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "https://dashboard-accumulation.vercel.app"
+          },
+          {
+            "key": "Access-Control-Allow-Methods",
+            "value": "GET, POST, OPTIONS"
+          },
+          {
+            "key": "Access-Control-Allow-Headers",
+            "value": "Content-Type, Authorization"
+          }
+        ]
+      }
+    ]
 }

@@ -17,6 +17,14 @@ const dbConfig = {
 
 const pool = mysql.createPool(dbConfig);
 
+const corsOptions = {
+  origin: process.env.FRONTEND_URL || "*",
+  methods: "GET,POST,OPTIONS",
+  allowedHeaders: "Content-Type,Authorization",
+};
+
+app.use(cors(corsOptions));
+
 // API to handle user login and retrieve or create user data
 app.post("/api/user", async (req, res) => {
     const { lineUserId, displayName } = req.body;
@@ -27,11 +35,12 @@ app.post("/api/user", async (req, res) => {
   
     try {
       console.log("Received data:", { lineUserId, displayName });
-  
+      
       // Check if user exists
       const [existingUser] = await pool.query(
         "SELECT * FROM usersdatabase WHERE UserID = ?",
         [lineUserId]
+        
       );
   
       if (existingUser.length > 0) {

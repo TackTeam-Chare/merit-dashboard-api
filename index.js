@@ -4,15 +4,8 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
-
-// CORS Configuration
-const corsOptions = {
-  origin: process.env.FRONTEND_URL || "*", // URL ของ Frontend ที่อนุญาต เช่น https://your-frontend.vercel.app
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-app.use(cors(corsOptions));
 
 // MySQL Database Connection
 const dbConfig = {
@@ -26,47 +19,50 @@ const pool = mysql.createPool(dbConfig);
 
 // API to handle user login and retrieve or create user data
 app.post("/api/user", async (req, res) => {
-  const { lineUserId, displayName } = req.body;
-
-  if (!lineUserId || !displayName) {
-    return res.status(400).json({ error: "Missing required fields: lineUserId, displayName" });
-  }
-
-  try {
-    console.log("Received data:", { lineUserId, displayName });
-
-    // Check if user exists
-    const [existingUser] = await pool.query("SELECT * FROM usersdatabase WHERE UserID = ?", [
-      lineUserId,
-    ]);
-
-    if (existingUser.length > 0) {
-      console.log("User exists:", existingUser[0]);
-      return res.json(existingUser[0]);
+    const { lineUserId, displayName } = req.body;
+  
+    if (!lineUserId || !displayName) {
+      return res.status(400).json({ error: "Missing required fields: lineUserId, displayName" });
     }
-
-    console.log("User does not exist. Creating new user...");
-
-    // If user does not exist, insert new user with default data
-    const [result] = await pool.query(
-      "INSERT INTO usersdatabase (UserID, Nickname, MeritPoint, MeritStatus, ConcentrationPoints, ConcentrationStatus) VALUES (?, ?, ?, ?, ?, ?)",
-      [lineUserId, displayName, 0, "Beginner", 0, "Beginner"]
-    );
-
-    console.log("New user created:", result);
-
-    // Retrieve the newly inserted user
-    const [newUser] = await pool.query("SELECT * FROM usersdatabase WHERE UserID = ?", [
-      lineUserId,
-    ]);
-
-    console.log("New user data:", newUser[0]);
-    return res.json(newUser[0]);
-  } catch (error) {
-    console.error("Error handling user login:", error.message, error.stack);
-    res.status(500).json({ error: "Internal server error." });
-  }
-});
+  
+    try {
+      console.log("Received data:", { lineUserId, displayName });
+  
+      // Check if user exists
+      const [existingUser] = await pool.query(
+        "SELECT * FROM usersdatabase WHERE UserID = ?",
+        [lineUserId]
+      );
+  
+      if (existingUser.length > 0) {
+        console.log("User exists:", existingUser[0]);
+        return res.json(existingUser[0]);
+      }
+  
+      console.log("User does not exist. Creating new user...");
+  
+      // If user does not exist, insert new user with default data
+      const [result] = await pool.query(
+        "INSERT INTO usersdatabase (UserID, Nickname, MeritPoint, MeritStatus, ConcentrationPoints, ConcentrationStatus) VALUES (?, ?, ?, ?, ?, ?)",
+        [lineUserId, displayName, 0, "Beginner", 0, "Beginner"]
+      );
+  
+      console.log("New user created:", result);
+  
+      // Retrieve the newly inserted user
+      const [newUser] = await pool.query(
+        "SELECT * FROM usersdatabase WHERE UserID = ?",
+        [lineUserId]
+      );
+  
+      console.log("New user data:", newUser[0]);
+      return res.json(newUser[0]);
+    } catch (error) {
+      console.error("Error handling user login:", error.message, error.stack);
+      res.status(500).json({ error: "Internal server error." });
+    }
+  });
+  
 
 // Server
 const PORT = process.env.PORT || 5000;

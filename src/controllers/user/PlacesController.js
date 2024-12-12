@@ -50,7 +50,18 @@ const saveReview = async (req, res) => {
   }
 };
 
+const specialfeatures = async (req, res) => {
+  try {
+    const [rows] = await pool.query("SELECT * FROM specialfeatures");
+    res.status(200).json(rows); // ส่งข้อมูลกลับไปที่ frontend
+  } catch (error) {
+    console.error("Error fetching special features:", error);
+    res.status(500).json({ error: "Failed to fetch special features" });
+  }
+};
+
 
 export default {
-  saveReview
+  saveReview,
+  specialfeatures
 };

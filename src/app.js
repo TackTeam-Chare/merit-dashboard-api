@@ -15,8 +15,7 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS ?
   process.env.ALLOWED_ORIGINS.split(',') :
   [
     'http://localhost:3000',
-    'https://traffy-fondue.vercel.app',
-    'https://2593-49-237-47-248.ngrok-free.app',
+  'https://dashboard-accumulated-merit.vercel.app'
   ];
 
 console.log('Initializing server...');
